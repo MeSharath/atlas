@@ -11,7 +11,7 @@ export class MapsService {
 
   constructor() {
     this.loader = new Loader({
-      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
       version: 'weekly',
       libraries: ['places', 'geometry']
     });
@@ -83,12 +83,12 @@ export class MapsService {
     // Clear existing markers
     this.clearMarkers();
 
-    markers.forEach((markerData, index) => {
+    markers.forEach((markerData) => {
       const marker = new google.maps.Marker({
         position: markerData.position,
         map: this.map,
         title: markerData.title,
-        icon: this.getMarkerIcon(markerData.type, index + 1),
+        icon: this.getMarkerIcon(markerData.type),
         animation: google.maps.Animation.DROP
       });
 
@@ -187,13 +187,13 @@ export class MapsService {
    * Create map configuration from activities
    */
   createMapConfigFromActivities(activities: Activity[]): MapConfig {
-    const markers: MapMarker[] = activities.map((activity, index) => ({
+    const markers: MapMarker[] = activities.map((activity) => ({
       id: activity.id,
       position: activity.location.coordinates,
       title: activity.name,
       description: activity.description,
       type: 'activity',
-      icon: this.getMarkerIcon('activity', index + 1)
+      icon: this.getMarkerIconUrl('activity')
     }));
 
     // Calculate center point
@@ -288,7 +288,7 @@ export class MapsService {
   /**
    * Get marker icon based on type and number
    */
-  private getMarkerIcon(type: string, number?: number): google.maps.Icon {
+  private getMarkerIcon(type: string): google.maps.Icon {
     const baseUrl = 'https://maps.google.com/mapfiles/ms/icons/';
     
     switch (type) {
@@ -313,6 +313,24 @@ export class MapsService {
           url: `${baseUrl}red-dot.png`,
           scaledSize: new google.maps.Size(32, 32)
         };
+    }
+  }
+
+  /**
+   * Get marker icon URL for MapMarker interface
+   */
+  private getMarkerIconUrl(type: string): string {
+    const baseUrl = 'https://maps.google.com/mapfiles/ms/icons/';
+    
+    switch (type) {
+      case 'activity':
+        return `${baseUrl}red-dot.png`;
+      case 'accommodation':
+        return `${baseUrl}blue-dot.png`;
+      case 'transport':
+        return `${baseUrl}green-dot.png`;
+      default:
+        return `${baseUrl}red-dot.png`;
     }
   }
 

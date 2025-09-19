@@ -309,3 +309,8 @@ export class AuthService {
 
 // Export singleton instance
 export const authService = AuthService.getInstance();
+
+// Helper function for updating user profile
+export const updateUserProfile = async (user: User): Promise<void> => {
+  return authService.updateUserProfile(user);
+};

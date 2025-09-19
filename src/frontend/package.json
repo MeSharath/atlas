@@ -12,15 +12,17 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.2",
+    "clsx": "^2.0.0",
+    "date-fns": "^2.30.0",
     "firebase": "^10.7.0",
+    "lucide-react": "^0.294.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "lucide-react": "^0.294.0",
-    "date-fns": "^2.30.0",
-    "clsx": "^2.0.0"
+    "reshaped": "^2.0.0"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.58.1",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",

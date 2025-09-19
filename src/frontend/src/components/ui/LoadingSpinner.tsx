@@ -1,45 +1,26 @@
 import React from 'react';
-import { BaseComponentProps } from '@/types';
+import { View, Text, Spinner } from 'reshaped';
 
-interface LoadingSpinnerProps extends BaseComponentProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  color?: 'primary' | 'secondary' | 'white' | 'gray';
+interface LoadingSpinnerProps {
+  size?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  color?: 'primary' | 'neutral' | 'critical' | 'success' | 'warning';
   text?: string;
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = 'md',
+  size = 4,
   color = 'primary',
-  text,
-  className = ''
+  text
 }) => {
-  const sizeClasses = {
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8',
-    xl: 'h-12 w-12'
-  };
-
-  const colorClasses = {
-    primary: 'border-primary-600',
-    secondary: 'border-secondary-600',
-    white: 'border-white',
-    gray: 'border-gray-600'
-  };
-
   return (
-    <div className={`flex flex-col items-center justify-center ${className}`}>
-      <div
-        className={`loading-spinner ${sizeClasses[size]} ${colorClasses[color]}`}
-        role="status"
-        aria-label="Loading"
-      />
+    <View direction="column" align="center" justify="center" gap={3}>
+      <Spinner size={size} color={color} />
       {text && (
-        <p className="mt-2 text-sm text-gray-600 animate-pulse">
+        <Text variant="body-2" color="neutral-faded">
           {text}
-        </p>
+        </Text>
       )}
-    </div>
+    </View>
   );
 };
 

@@ -3,8 +3,8 @@
 export interface User {
   uid: string;
   email: string;
-  displayName?: string;
-  photoURL?: string;
+  displayName?: string | null;
+  photoURL?: string | null;
   preferences: UserPreferences;
   profile: UserProfile;
 }

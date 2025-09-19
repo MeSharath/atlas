@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { 
+  View, 
+  Button, 
+  Text, 
+  Avatar, 
+  Dropdown, 
+  Icon,
+  Hidden,
+  Container
+} from 'reshaped';
 import { useAuth } from '@/hooks/useAuth';
 import { analyticsService } from '@/services/analytics';
 import { 
   Menu, 
   X, 
-  User, 
   LogOut, 
   Settings, 
   MapPin,
@@ -18,7 +27,6 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
@@ -40,288 +48,252 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <View
+      position="fixed"
+      insetTop={0}
+      insetInline={0}
+      zIndex={50}
+      backgroundColor="neutral-faded"
+      borderColor="neutral-faded"
+      borderBottomWidth={1}
+      paddingBlock={3}
+    >
+      <Container maxWidth="7xl">
+        <View direction="row" align="center" justify="space-between">
           {/* Logo */}
-          <div className="flex items-center">
-            <Link 
-              to="/" 
-              className="flex items-center space-x-2"
-              onClick={() => handleNavClick('logo')}
-            >
-              <MapPin className="h-8 w-8 text-primary-600" />
-              <span className="text-xl font-bold gradient-text">SoloAI</span>
+          <View direction="row" align="center" gap={2}>
+            <Link to="/" onClick={() => handleNavClick('logo')}>
+              <View direction="row" align="center" gap={2}>
+                <Icon svg={MapPin} size={8} color="primary" />
+                <Text variant="title-4" weight="bold" color="primary">
+                  SoloAI
+                </Text>
+              </View>
             </Link>
-          </div>
+          </View>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {user ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActivePath('/dashboard')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('dashboard')}
-                >
-                  <Home className="h-4 w-4" />
-                  <span>Dashboard</span>
-                </Link>
-                
-                <Link
-                  to="/create"
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActivePath('/create')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('create')}
-                >
-                  <Plus className="h-4 w-4" />
-                  <span>Create Trip</span>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/"
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActivePath('/')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('home')}
-                >
-                  Home
-                </Link>
-                
-                <a
-                  href="#features"
-                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors"
-                  onClick={() => handleNavClick('features')}
-                >
-                  Features
-                </a>
-                
-                <a
-                  href="#how-it-works"
-                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50 transition-colors"
-                  onClick={() => handleNavClick('how-it-works')}
-                >
-                  How It Works
-                </a>
-              </>
-            )}
-          </nav>
+          <Hidden below="s">
+            <View direction="row" align="center" gap={6}>
+              {user ? (
+                <>
+                  <Link to="/dashboard" onClick={() => handleNavClick('dashboard')}>
+                    <Button
+                      variant={isActivePath('/dashboard') ? 'solid' : 'ghost'}
+                      color={isActivePath('/dashboard') ? 'primary' : 'neutral'}
+                      startIcon={<Icon svg={Home} />}
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/create" onClick={() => handleNavClick('create')}>
+                    <Button
+                      variant={isActivePath('/create') ? 'solid' : 'ghost'}
+                      color={isActivePath('/create') ? 'primary' : 'neutral'}
+                      startIcon={<Icon svg={Plus} />}
+                    >
+                      Create Trip
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/" onClick={() => handleNavClick('home')}>
+                    <Button
+                      variant={isActivePath('/') ? 'solid' : 'ghost'}
+                      color={isActivePath('/') ? 'primary' : 'neutral'}
+                    >
+                      Home
+                    </Button>
+                  </Link>
+                  
+                  <a href="#features" onClick={() => handleNavClick('features')}>
+                    <Button variant="ghost" color="neutral">
+                      Features
+                    </Button>
+                  </a>
+                  
+                  <a href="#how-it-works" onClick={() => handleNavClick('how-it-works')}>
+                    <Button variant="ghost" color="neutral">
+                      How It Works
+                    </Button>
+                  </a>
+                </>
+              )}
+            </View>
+          </Hidden>
 
           {/* User Menu / Auth Buttons */}
-          <div className="flex items-center space-x-4">
+          <View direction="row" align="center" gap={3}>
             {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors"
-                >
-                  {user.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt={user.displayName || 'User'}
-                      className="h-8 w-8 rounded-full"
-                    />
-                  ) : (
-                    <div className="h-8 w-8 bg-primary-600 rounded-full flex items-center justify-center">
-                      <User className="h-4 w-4 text-white" />
-                    </div>
-                  )}
-                  <span className="hidden sm:block text-sm font-medium text-gray-700">
-                    {user.displayName || user.email?.split('@')[0]}
-                  </span>
-                </button>
-
-                {/* User Dropdown Menu */}
-                {isUserMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                    <Link
-                      to="/profile"
-                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        handleNavClick('profile');
-                      }}
-                    >
-                      <Settings className="h-4 w-4 mr-2" />
-                      Profile & Settings
-                    </Link>
-                    
-                    <button
-                      onClick={() => {
-                        setIsUserMenuOpen(false);
-                        handleSignOut();
-                      }}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sign Out
-                    </button>
-                  </div>
-                )}
-              </div>
+              <Dropdown>
+                <Dropdown.Trigger>
+                  <Button variant="ghost" color="neutral">
+                    <View direction="row" align="center" gap={2}>
+                      <Avatar
+                        src={user.photoURL || undefined}
+                        fallback={user.displayName?.[0] || user.email?.[0] || 'U'}
+                        size={8}
+                      />
+                      <Hidden below="s">
+                        <Text variant="body-2" weight="medium">
+                          {user.displayName || user.email?.split('@')[0]}
+                        </Text>
+                      </Hidden>
+                    </View>
+                  </Button>
+                </Dropdown.Trigger>
+                
+                <Dropdown.Content>
+                  <Dropdown.Item
+                    startIcon={<Icon svg={Settings} />}
+                    onClick={() => {
+                      handleNavClick('profile');
+                      navigate('/profile');
+                    }}
+                  >
+                    Profile & Settings
+                  </Dropdown.Item>
+                  
+                  <Dropdown.Item
+                    startIcon={<Icon svg={LogOut} />}
+                    onClick={handleSignOut}
+                  >
+                    Sign Out
+                  </Dropdown.Item>
+                </Dropdown.Content>
+              </Dropdown>
             ) : (
-              <div className="flex items-center space-x-3">
-                <Link
-                  to="/login"
-                  className="btn btn-ghost"
-                  onClick={() => handleNavClick('login')}
-                >
-                  Sign In
+              <View direction="row" align="center" gap={3}>
+                <Link to="/login" onClick={() => handleNavClick('login')}>
+                  <Button variant="ghost" color="neutral">
+                    Sign In
+                  </Button>
                 </Link>
-                <Link
-                  to="/signup"
-                  className="btn btn-primary"
-                  onClick={() => handleNavClick('signup')}
-                >
-                  Get Started
+                <Link to="/signup" onClick={() => handleNavClick('signup')}>
+                  <Button variant="solid" color="primary">
+                    Get Started
+                  </Button>
                 </Link>
-              </div>
+              </View>
             )}
 
             {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-md text-gray-700 hover:text-primary-600 hover:bg-gray-100 transition-colors"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
+            <Hidden above="s">
+              <Button
+                variant="ghost"
+                color="neutral"
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              >
+                <Icon svg={isMobileMenuOpen ? X : Menu} />
+              </Button>
+            </Hidden>
+          </View>
+        </View>
+      </Container>
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            {user ? (
-              <>
-                <Link
-                  to="/dashboard"
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium ${
-                    isActivePath('/dashboard')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('dashboard')}
-                >
-                  <Home className="h-5 w-5" />
-                  <span>Dashboard</span>
-                </Link>
-                
-                <Link
-                  to="/create"
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium ${
-                    isActivePath('/create')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('create')}
-                >
-                  <Plus className="h-5 w-5" />
-                  <span>Create Trip</span>
-                </Link>
-                
-                <Link
-                  to="/profile"
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium ${
-                    isActivePath('/profile')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('profile')}
-                >
-                  <Settings className="h-5 w-5" />
-                  <span>Profile & Settings</span>
-                </Link>
-                
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                >
-                  <LogOut className="h-5 w-5" />
-                  <span>Sign Out</span>
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/"
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${
-                    isActivePath('/')
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
-                  }`}
-                  onClick={() => handleNavClick('home')}
-                >
-                  Home
-                </Link>
-                
-                <a
-                  href="#features"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                  onClick={() => handleNavClick('features')}
-                >
-                  Features
-                </a>
-                
-                <a
-                  href="#how-it-works"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-gray-50"
-                  onClick={() => handleNavClick('how-it-works')}
-                >
-                  How It Works
-                </a>
-                
-                <div className="pt-4 pb-3 border-t border-gray-200">
-                  <div className="flex flex-col space-y-2">
-                    <Link
-                      to="/login"
-                      className="btn btn-ghost w-full"
-                      onClick={() => handleNavClick('login')}
+        <Hidden above="s">
+          <View
+            backgroundColor="neutral-faded"
+            borderColor="neutral-faded"
+            borderTopWidth={1}
+            paddingBlock={4}
+            paddingInline={4}
+          >
+            <View gap={2}>
+              {user ? (
+                <>
+                  <Link to="/dashboard" onClick={() => handleNavClick('dashboard')}>
+                    <Button
+                      variant={isActivePath('/dashboard') ? 'solid' : 'ghost'}
+                      color={isActivePath('/dashboard') ? 'primary' : 'neutral'}
+                      startIcon={<Icon svg={Home} />}
+                      fullWidth
                     >
-                      Sign In
-                    </Link>
-                    <Link
-                      to="/signup"
-                      className="btn btn-primary w-full"
-                      onClick={() => handleNavClick('signup')}
+                      Dashboard
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/create" onClick={() => handleNavClick('create')}>
+                    <Button
+                      variant={isActivePath('/create') ? 'solid' : 'ghost'}
+                      color={isActivePath('/create') ? 'primary' : 'neutral'}
+                      startIcon={<Icon svg={Plus} />}
+                      fullWidth
                     >
-                      Get Started
-                    </Link>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+                      Create Trip
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/profile" onClick={() => handleNavClick('profile')}>
+                    <Button
+                      variant={isActivePath('/profile') ? 'solid' : 'ghost'}
+                      color={isActivePath('/profile') ? 'primary' : 'neutral'}
+                      startIcon={<Icon svg={Settings} />}
+                      fullWidth
+                    >
+                      Profile & Settings
+                    </Button>
+                  </Link>
+                  
+                  <Button
+                    variant="ghost"
+                    color="neutral"
+                    startIcon={<Icon svg={LogOut} />}
+                    onClick={handleSignOut}
+                    fullWidth
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/" onClick={() => handleNavClick('home')}>
+                    <Button
+                      variant={isActivePath('/') ? 'solid' : 'ghost'}
+                      color={isActivePath('/') ? 'primary' : 'neutral'}
+                      fullWidth
+                    >
+                      Home
+                    </Button>
+                  </Link>
+                  
+                  <a href="#features" onClick={() => handleNavClick('features')}>
+                    <Button variant="ghost" color="neutral" fullWidth>
+                      Features
+                    </Button>
+                  </a>
+                  
+                  <a href="#how-it-works" onClick={() => handleNavClick('how-it-works')}>
+                    <Button variant="ghost" color="neutral" fullWidth>
+                      How It Works
+                    </Button>
+                  </a>
+                  
+                  <View paddingTop={4} borderColor="neutral-faded" borderTopWidth={1}>
+                    <View gap={2}>
+                      <Link to="/login" onClick={() => handleNavClick('login')}>
+                        <Button variant="ghost" color="neutral" fullWidth>
+                          Sign In
+                        </Button>
+                      </Link>
+                      <Link to="/signup" onClick={() => handleNavClick('signup')}>
+                        <Button variant="solid" color="primary" fullWidth>
+                          Get Started
+                        </Button>
+                      </Link>
+                    </View>
+                  </View>
+                </>
+              )}
+            </View>
+          </View>
+        </Hidden>
       )}
-
-      {/* Click outside to close menus */}
-      {(isMobileMenuOpen || isUserMenuOpen) && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => {
-            setIsMobileMenuOpen(false);
-            setIsUserMenuOpen(false);
-          }}
-        />
-      )}
-    </header>
+    </View>
   );
 };
 
